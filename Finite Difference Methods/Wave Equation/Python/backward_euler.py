@@ -15,6 +15,12 @@ class Backward_Euler:
        self.CFL = k/h
        self.exact_sol = np.zeros([self.time_steps, self.space_steps])
 
+    def exact(self):
+        #compute exact solution
+        for n in range(self.time_steps):
+            for j in range(self.space_steps):
+                self.exact_sol[n,j] = self.f(self.t_axis[n], self.x_axis[j])
+
     def backward_euler(self, t0):
             self.time_steps = self.space_steps
             tf = self.time_steps * self.k 
