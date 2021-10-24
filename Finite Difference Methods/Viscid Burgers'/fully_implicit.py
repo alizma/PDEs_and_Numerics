@@ -1,5 +1,5 @@
 import numpy as np
-#import time
+import time
 
 import matplotlib.pyplot as plt
 
@@ -19,27 +19,24 @@ sigma = k / (h**2)
 def Fully_Implicit():
     #ti = time.perf_counter()
     v = np.zeros([time_steps, space_steps])
-    v[0, :] = init_values
-    cof = eta * sigma
-    half_lam = k / (2 * h)
+    v[0, :], cof, half_lam = init_values, eta * sigma, k / (2 * h)
     
     for t in range(time_steps - 1):
         coeff_matrix = np.zeros([space_steps, space_steps])
         for n in range(space_steps):
             if n == 0:
-                coeff_matrix[n, space_steps - 1] = -cof - half_lam * v[t, 0]
+                coeff_matrix[n, space_steps - 1] = -(cof + half_lam * v[t, 0])
                 coeff_matrix[n, 0] = 1 + 2*cof
-                coeff_matrix[n, 1] = -cof + half_lam * v[t, 0]
+                coeff_matrix[n, 1] =  half_lam * v[t, 0] - cof 
             elif n == space_steps - 1:
-                coeff_matrix[n, n - 1] = -cof - half_lam * v[t, n]
+                coeff_matrix[n, n - 1] = -(cof + half_lam * v[t, n])
                 coeff_matrix[n, n] = 1 + 2*cof
-                coeff_matrix[n, 0] =  -cof + half_lam * v[t, n]
+                coeff_matrix[n, 0] =   half_lam * v[t, n] - cof
             else:
-                coeff_matrix[n, n - 1] = -cof - half_lam * v[t, n]
+                coeff_matrix[n, n - 1] = -(cof + half_lam * v[t, n])
                 coeff_matrix[n, n] = 1 + 2*cof
-                coeff_matrix[n, n + 1] = -cof + half_lam * v[t, n]
-        coeff_matrix = np.linalg.inv(coeff_matrix)
-        v[t+1, :] = np.matmul(coeff_matrix, v[t, :])
+                coeff_matrix[n, n + 1] = half_lam * v[t, n] - cof
+        v[t+1, :] = np.matmul(np.linalg.inv(coeff_matrix), v[t, :])
     #tf = time.perf_counter()
     #print(f"Fully Implicit Time: {ti - tf:0.4f}")
     return v
@@ -58,3 +55,6 @@ def main():
     plt.title('Fully Implicit Viscid Burgers, at $\eta = 0.005$')
     plt.legend()
     plt.show()
+
+if __name__ == '__main__':
+    main() 
