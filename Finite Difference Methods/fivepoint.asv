@@ -1,0 +1,33 @@
+clear
+nx = 17; ny = 9; 
+dx = 1 / (nx - 1); 
+dy = 1 / (ny - 1); 
+diag_block = eye(ny - 1) * (-2 / dx^2 - 2 / dy^2); 
+diag_block = diag_block + diag(ones(ny-2, 1) / dy^2, 1); 
+diag_block = diag_block + diag(ones(ny-2, 1) / dy^2, -1); 
+Matrix = kron(eye(nx - 1), diag_block); 
+Matrix = Matrix + diag(ones((nx - 2) * (ny - 1), 1) / dx^2, ny - 1);
+Matrix = Matrix + diag(ones((nx-2) * (ny-1), 1) / dx^2, -(ny-1)); 
+x = [1:(nx-1)] * dx; 
+y = [1:(ny-1)] * dy; 
+% [X, Y] = meshgrid(x, y); 
+[Y, X] = meshgrid(x, y);  
+
+% the f(x) after applying the - discrete laplacian to the given function 
+F = 2.*sin(X) .* cos(X) - 2; 
+f = reshape(F', (nx-1) * (ny - 1), 1); 
+surf(X, Y, F); 
+xlabel('X')
+ylabel('Y')
+u = Matrix \ f; 
+U = reshape(u, ny-1, nx-1)'; 
+surf(X, Y, U)
+xlabel('X')
+ylabel('Y')
+G = sin(X) .* cos(X) - Y .* Y; 
+g = reshape(G', (nx-1)*(ny-1), 1); 
+v = Matrix \ (f + g); 
+V  = reshape(v, ny-1, nx-1)';
+surf(X, Y, V)
+diff = abs(minus(U, V));
+max_err = max(max(diff));
