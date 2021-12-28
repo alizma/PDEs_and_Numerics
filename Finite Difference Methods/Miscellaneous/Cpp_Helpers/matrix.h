@@ -16,6 +16,13 @@ template<class T, int N, int M> class matrix : public vector<vector<T, N>, M> {
             set(1, v); 
         }
 
+        // copy constructor 
+        matrix(const matrix<T, N, M> &m1) { 
+            for (int i = 0; i < M; i++) {
+                set(i, m1[i]);
+            }
+        }
+
         // return the (i, j)th matrix entry 
         const T& operator() (int i, int j) const { 
             return (*this)[j][i];
