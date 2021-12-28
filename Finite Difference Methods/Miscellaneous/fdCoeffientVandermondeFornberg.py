@@ -4,7 +4,6 @@ import numpy as np
 
 def stablefdcoefficients(k, xbar, x): 
     n = x.size # length of the list of values to be interpolated on 
-    c = np.zeros(n) 
 
     if k >= n: 
         raise ValueError('length(x) must be greater than k')
@@ -26,12 +25,12 @@ def stablefdcoefficients(k, xbar, x):
             c2 = c2*c3 
             if j == i-1: 
                 for s in range(mn, 1, -1): 
-                    C[i+1][s+1] = c1 * (s * c[i+1-1][s] - c5 * C[i][s+1]) / c2
+                    C[i+1][s+1] = c1 * (s * C[i][s] - c5 * C[i][s+1]) / c2
 
-                C[i+1, 1] = (-1) * c1 * c5 * C[i+1-1][1] / c2 
+                C[i+1][1] = (-1) * c1 * c5 * C[i][1] / c2 
 
                 for s in range(mn, 1, -1): 
-                    C[j+1][s+1] = (c4*c[j+1][s+1] - s*C[j+1][s]) / c3
+                    C[j+1][s+1] = (c4*C[j+1][s+1] - s*C[j+1][s]) / c3
 
                 C[j+1][1] = c4*C[j+1][1] / c3 
 
