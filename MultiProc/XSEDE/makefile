@@ -1,9 +1,9 @@
-EXECS = simpsonpi 
+EXECS = laplace 
 MPICC = mpicc 
 
 all: ${EXECS}
-simpsonpi: simpsonpi.c 
-	${MPICC} -o simpsonpi simpsonpi.c -lm
+laplace: laplace.c 
+	${MPICC} -o laplace laplace.c -lm
 
 clean: 
 	rm -f ${EXECS} 
