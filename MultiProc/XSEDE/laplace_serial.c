@@ -1,5 +1,4 @@
 #include <stdio.h> 
-#include <mpi.h> 
 #include <string.h> 
 #include <math.h> 
 #include <sys/time.h> 
@@ -67,7 +66,7 @@ int main(int argc, char** argv) {
     while (dt > MAX_TEMP_ERROR && curr_iter <= max_iter) {
         //kernel computation 
         for (i = 1; i <= ROWS; i++) { 
-            for (j = 1; j <= ROWS; j++) { 
+            for (j = 1; j <= COLUMNS; j++) { 
                 Temp[i][j] = 0.25 * (Temp_last[i+1][j] + Temp_last[i-1][j] + Temp_last[i][j+1] + Temp_last[i][j-1]); 
             }
         }
